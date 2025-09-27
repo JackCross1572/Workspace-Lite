@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <header class="header">
+    <div class="user-actions">
+      <a href="login.html" class="login-btn">Login</a>
+    </div>
+</header>
+</nav>
+  <style>
+    /* CẢI THIỆN GIAO DIỆN WEB: Tăng độ tương phản, thêm hiệu ứng sâu và glow */
+    :root{
+      --bg:#0a0e1b; /* Nền tối chính */
+      --panel:#14192b; /* Nền của các thành phần phụ */
+      --muted:#a3a8c3;
+      --text:#ffffff; /* Trắng tinh khiết hơn */
+      --accent:#5b84f3; /* Màu xanh dương hiện đại (Blue) */
+      --accent2:#1be9b6; /* Xanh lá/cyan nổi bật */
+      --danger:#ff6b6b;
+      --card:#1c233a; /* Nền của Card/Component */
+      --border:#303a5e; /* Border rõ ràng hơn */
+      --shadow-dark: 0 8px 25px rgba(0, 0, 0, 0.4); /* Bóng tối sâu */
+      --shadow-light: inset 0 0 4px rgba(255, 255, 255, 0.05); /* Bóng sáng subtle */
+      --accent-glow: 0 0 15px rgba(91, 132, 243, 0.6); /* Glow mạnh hơn */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font:15px/1.7 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; /* Tăng font/line-height */
+      background:linear-gradient(180deg, var(--bg) 0%, #0e122a 100%);
+      color:var(--text);
+    }
+    header{
+      position:sticky;top:0;z-index:5;background:rgba(15,18,32,.9);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Bóng cho Header */
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{
+      width:30px;height:30px;border-radius:10px;background:conic-gradient(from 210deg,var(--accent),var(--accent2));
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+    .brand h1{font-size:18px;margin:0;font-weight:700;letter-spacing:.5px}
+    nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    nav button{
+      background:var(--panel);color:var(--text);border:1px solid var(--border);
+      padding:9px 18px;border-radius:14px; /* Bo góc lớn hơn */
+      cursor:pointer;transition:.2s ease-out;
+      font-weight: 500;
+    }
+    /* Hiệu ứng nổi khi hover/active */
+    nav button.active, nav button:hover{
+      background:var(--card);
+      border-color:var(--accent); 
+      transform:translateY(-2px); 
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6), var(--shadow-light);
+    }
+    .grid{display:grid;gap:20px;grid-template-columns:1fr}
+    @media(min-width:960px){.grid{grid-template-columns: 1.2fr .8fr}}
+    section{display:none;padding:16px}
+    section.active{display:block}
+    
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 20px}
+    .toolbar input, .toolbar select, .toolbar button, .toolbar textarea{
+      background:var(--panel);color:var(--text);
+      padding:10px 14px;border-radius:12px; /* Bo góc cho inputs */
+      outline:none;min-height:42px;
+      border:1px solid var(--border);
+      transition:border-color 0.2s, background-color 0.2s;
+    }
+    .toolbar input:focus, .toolbar textarea:focus { 
+        border-color: var(--accent); 
+        background: #202844; 
+    }
+    .toolbar button.primary{
+      background:var(--accent);border-color:transparent;color:#fff;
+      font-weight: 600;
+      box-shadow: var(--accent-glow); /* Hiệu ứng glow cho nút chính */
+      transition: background 0.2s, transform 0.1s;
+    }
+    .toolbar button.primary:hover {
+        background: #5077e3;
+    }
+    .toolbar button.ghost{background:transparent;border-color:var(--border)}
+    
+    .card{
+      background:var(--card);border:1px solid var(--border);border-radius:18px; /* Bo góc lớn */
+      padding:20px;
+      box-shadow:var(--shadow-dark); /* Bóng sâu */
+    }
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .progress{height:14px;background:#14172b;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+    .col{display:flex;flex-direction:column;gap:14px}
+    .pill{padding:5px 12px;border-radius:999px;background:#131733;border:1px solid var(--border);font-size:13px}
+    
+    /* Kanban */
+    .kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .column{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:15px;min-height:250px}
+    .task{
+        background:#1a213e;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;cursor:grab;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .task:active{
+        cursor:grabbing; 
+        transform: scale(1.03) translateY(-2px); /* Nổi lên khi kéo */
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Mind map */
+    #mapWrap{border:1px solid var(--border);border-radius:16px; height:65vh;position:relative;overflow:hidden;background:#0d1127; user-select: none;}
+    #mapWrap.panning{cursor:grabbing}
+    #map{position:absolute;inset:0} 
+    
+    .map-mover { 
+      position: absolute; 
+      inset: 0; 
+      transform-origin: 0 0; 
+    }
+    
+    .node{ 
+        position:absolute;padding:10px 16px;border-radius:16px;
+        background:#1b244d;border:2px solid var(--border); /* Border dày hơn */
+        cursor:grab;min-width:100px;text-align:center;user-select:none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        font-weight: 500;
+        transition: border-color 0.1s, box-shadow 0.1s;
+    }
+    /* Sửa lỗi: Đặt lại con trỏ chuột khi node đang được edit */
+    .node.editing{
+        cursor: text !important;
+        border-color: var(--accent2) !important;
+        box-shadow: var(--shadow-dark), 0 0 10px var(--accent2) !important;
+    }
+    /* Đảm bảo khi editing, chỉ phần text là tương tác được */
+    .node-text {
+        pointer-events: auto;
+    }
+    .node.editing .node-text {
+        outline: none;
+    }
+    
+    .node:active:not(.editing){cursor:grabbing}
+    
+    /* Context Menu */
+    .context-menu {
+        position: absolute;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        z-index: 100; /* Z-index cao hơn để nổi lên trên mapWrap */
+        box-shadow: var(--shadow-dark);
+        padding: 5px 0;
+    }
+    .context-menu button {
+        display: block;
+        width: 100%;
+        padding: 8px 15px;
+        background: transparent;
+        border: none;
+        color: var(--text);
+        text-align: left;
+        cursor: pointer;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+    .context-menu button:hover {
+        background: var(--panel);
+        color: var(--accent);
+    }
+
+    /* Notes */
+    .note{background:#1a213e;border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);}
+    .note img{max-width:100%;border-radius:10px;border:1px solid #0003}
+    audio{width:100%}
+    
+    /* Whiteboard (Đã giữ các sửa lỗi và CSS cursor) */
+    #board{width:100%;height:450px;background:#0a0e22;border:1px solid var(--border);border-radius:16px;touch-action:none}
+    #board.pen-cursor{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e8ebff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z'%3E%3C/path%3E%3C/svg%3E") 4 20, auto}
+    #board.eraser-cursor{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='white' stroke='black' stroke-width='1'%3E%3Crect x='2' y='6' width='20' height='12' rx='2'/%3E%3C/rect%3E%3C/svg%3E") 12 12, auto}
+    .toolbar button.tool-active{background:var(--accent);border-color:transparent;color:#fff; box-shadow: var(--accent-glow);}
+
+    /* Floating Action Buttons (FABs) */
+    .actions{position:fixed;right:20px;bottom:20px;display:flex;gap:12px;flex-direction:column}
+    .fab{
+        background:var(--accent);color:#fff;border:none;border-radius:16px; /* Bo góc FAB */
+        padding:12px 18px;cursor:pointer;
+        box-shadow:var(--accent-glow), 0 8px 20px #0009;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .fab:hover { transform: scale(1.05); }
+    .fab.secondary{background:#253055;color:var(--text);border:1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);}
+    .fab.danger{background:var(--danger); box-shadow: 0 0 10px rgba(255, 107, 107, 0.6);}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      background:#141833;border:1px solid var(--border);border-radius:8px;padding:3px 8px;font-size:13px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <h1>Workspace Lite</h1>
+        <span class="pill">No-AI • Offline-first</span>
+      </div>
+      <nav id="tabs">
+        <button data-tab="goals" class="active">Goals</button>
+        <button data-tab="projects">Projects</button>
+        <button data-tab="mindmap">Mind Map</button>
+        <button data-tab="notes">Notes</button>
+        <button data-tab="whiteboard">Whiteboard</button>
+      </nav>
+      <div class="muted">Lưu trữ: <span class="kbd">localStorage</span> • Export/Import JSON • Dán thẳng vào Firebase Hosting</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="goals" class="active">
+      <div class="toolbar">
+        <input id="goalTitle" placeholder="Mục tiêu (VD: Học Next.js cơ bản)" />
+        <input id="goalDue" type="date" />
+        <button class="primary" id="addGoal">Thêm Goal</button>
+      </div>
+      <div id="goalList" class="grid"></div>
+    </section>
+
+    <section id="projects">
+      <div class="toolbar">
+        <input id="taskTitle" placeholder="Thêm task..." />
+        <button class="primary" id="addTask">Thêm</button>
+        <span class="muted">Kéo thả giữa các cột</span>
+      </div>
+      <div class="kanban">
+        <div class="column" data-col="todo">
+          <div class="row"><h3>Todo</h3><span class="pill" id="cTodo">0</span></div>
+          <div class="col" id="todo"></div>
+        </div>
+        <div class="column" data-col="doing">
+          <div class="row"><h3>Doing</h3><span class="pill" id="cDoing">0</span></div>
+          <div class="col" id="doing"></div>
+        </div>
+        <div class="column" data-col="done">
+          <div class="row"><h3>Done</h3><span class="pill" id="cDone">0</span></div>
+          <div class="col" id="done"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mindmap">
+      <div class="toolbar">
+        <input id="nodeText" placeholder="Nội dung node…" />
+        <button class="primary" id="addNode">Thêm Node</button>
+        <button id="clearMap" class="ghost">Xóa Map</button>
+      </div>
+      <div id="mapWrap" class="card">
+        <svg id="map" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                      refX="8" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#5b84f3" /> </marker>
+            </defs>
+        </svg>
+        <div id="contextMenu" class="context-menu" style="display: none;">
+            <button id="editNodeBtn">Sửa</button>
+            <button id="deleteNodeBtn">Xóa</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="notes">
+      <div class="toolbar">
+        <input id="noteTitle" placeholder="Tiêu đề ghi chú" />
+        <textarea id="noteBody" placeholder="Nội dung…" rows="2" style="flex:1;min-width:180px"></textarea>
+        <input id="noteImage" type="file" accept="image/*" />
+        <button class="primary" id="addNote">Lưu Note</button>
+      </div>
+      <div class="toolbar">
+        <button id="recBtn" class="ghost">🎙️ Bắt đầu ghi âm</button>
+      </div>
+      <div id="noteList" class="col"></div>
+    </section>
+
+    <section id="whiteboard">
+      <div class="toolbar">
+        <button id="wb-pen" class="ghost tool-active">Bút ✏️</button>
+        <button id="wb-eraser" class="ghost">Tẩy 🧼</button>
+        <label>Màu:
+          <input type="color" id="wb-color" value="#5b84f3" />
+        </label>
+        <label>Độ dày:
+          <input type="range" id="wb-thickness" min="1" max="50" value="5" />
+        </label>
+        <button id="wb-clear" class="ghost">Xóa tất cả ❌</button>
+        <button id="exportBoard" class="primary">Xuất PNG</button>
+      </div>
+      <canvas id="board"></canvas>
+    </section>
+  </main>
+
+  <div class="actions">
+    <button id="exportBtn" class="fab secondary">⬇️ Export JSON</button>
+    <button id="importBtn" class="fab secondary">⬆️ Import JSON</button>
+    <button id="resetBtn" class="fab danger">🗑 Reset</button>
+  </div>
+
+  <script>
+    /* ========= Helpers / Storage ========= */
+    const $ = (q, el=document)=>el.querySelector(q);
+    const $$ = (q, el=document)=>Array.from(el.querySelectorAll(q));
+    const dbKey = 'workspace-lite';
+    const state = JSON.parse(localStorage.getItem(dbKey) || '{}');
+
+    function save(){
+      localStorage.setItem(dbKey, JSON.stringify(state));
+      updateCounts();
+    }
+    function uid(){ return Math.random().toString(36).slice(2,10) }
+
+    /* ========= Tabs ========= */
+    const tabBtns = $$('#tabs button');
+    tabBtns.forEach(b=>b.onclick=()=>{
+      tabBtns.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      $$('main section').forEach(s=>s.classList.remove('active'));
+      $('#'+b.dataset.tab).classList.add('active');
+      if (b.dataset.tab === 'whiteboard') {
+          fitBoard(); 
+      }
+    });
+
+    /* ========= GOALS ========= */
+    state.goals ??= [];
+    const goalList = $('#goalList');
+    $('#addGoal').onclick = ()=>{
+      const title = $('#goalTitle').value.trim();
+      if(!title) return;
+      state.goals.push({id:uid(), title, due:$('#goalDue').value||'', tasks:[]});
+      $('#goalTitle').value=''; $('#goalDue').value='';
+      renderGoals(); save();
+    };
+    $('#goalTitle').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        $('#addGoal').click();
+      }
+    });
+
+    function renderGoals(){
+      goalList.innerHTML='';
+      state.goals.forEach(g=>{
+        const wrap = document.createElement('div'); wrap.className='card';
+        const pct = g.tasks.length ? Math.round(g.tasks.filter(t=>t.done).length/g.tasks.length*100) : 0;
+        wrap.innerHTML = `
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <div>
+              <h3 style="margin:0">${escapeHtml(g.title)}</h3>
+              <div class="muted">${g.due?('Hạn: '+g.due):'Không hạn'}</div>
+            </div>
+            <div style="min-width:160px">
+              <div class="progress"><i style="width:${pct}%"></i></div>
+              <div class="muted" style="text-align:right">${pct}%</div>
+            </div>
+          </div>
+          <div class="col" style="margin-top:10px" data-goal="${g.id}"></div>
+          <div class="row" style="margin-top: 15px;">
+            <input placeholder="Thêm key result / task…" data-newtask="${g.id}" style="flex:1">
+            <button class="primary" data-addtask="${g.id}">Thêm</button>
+            <button class="ghost" data-delgoal="${g.id}">Xóa Goal</button>
+          </div>
+        `;
+        goalList.appendChild(wrap);
+        const box = wrap.querySelector(`[data-goal="${g.id}"]`);
+        g.tasks.forEach((t,i)=>{
+          const line = document.createElement('div');
+          line.className='row';
+          line.innerHTML = `
+            <label style="display:flex;align-items:center;gap:8px;flex:1">
+              <input type="checkbox" ${t.done?'checked':''} data-toggle="${g.id}:${i}">
+              <span style="${t.done ? 'text-decoration: line-through; color: var(--muted);' : ''}">${escapeHtml(t.text)}</span>
+            </label>
+            <button class="ghost" data-deltask="${g.id}:${i}">Xóa</button>
+          `;
+          box.appendChild(line);
+        });
+      });
+
+      // events
+      $$('[data-addtask]').forEach(b=>b.onclick=()=>{
+        const id=b.dataset.addtask; const goal=state.goals.find(x=>x.id===id);
+        const inp = $(`[data-newtask="${id}"]`);
+        const text = (inp.value||'').trim(); if(!text) return;
+        goal.tasks.push({text, done:false}); inp.value=''; renderGoals(); save();
+      });
+      $$('[data-toggle]').forEach(chk=>chk.onchange=()=>{
+        const [gid,idx]=chk.dataset.toggle.split(':'); const g=state.goals.find(x=>x.id===gid);
+        g.tasks[idx].done=chk.checked; renderGoals(); save();
+      });
+      $$('[data-deltask]').forEach(b=>b.onclick=()=>{
+        const [gid,idx]=b.dataset.deltask.split(':'); const g=state.goals.find(x=>x.id===gid);
+        g.tasks.splice(+idx,1); renderGoals(); save();
+      });
+      $$('[data-delgoal]').forEach(b=>b.onclick=()=>{
+        const id=b.dataset.delgoal; state.goals=state.goals.filter(x=>x.id!==id); renderGoals(); save();
+      });
+    }
+
+    /* ========= PROJECTS / KANBAN ========= */
+    state.tasks ??= {todo:[], doing:[], done:[]};
+    $('#addTask').onclick = ()=>{
+      const t = $('#taskTitle').value.trim(); if(!t) return;
+      state.tasks.todo.push({id:uid(), title:t}); $('#taskTitle').value=''; renderKanban(); save();
+    };
+    $('#taskTitle').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault(); 
+        $('#addTask').click(); 
+      }
+    });
+    
+    // HÀM CHUYỂN TASK (TÍNH NĂNG NÚT NEXT)
+    function moveTaskNext(taskId) {
+        const columns = ['todo', 'doing', 'done'];
+        let task = null;
+        let currentColKey = null;
+
+        for (const colKey of columns) {
+            const index = state.tasks[colKey].findIndex(t => t.id === taskId);
+            if (index !== -1) {
+                task = state.tasks[colKey].splice(index, 1)[0]; 
+                currentColKey = colKey;
+                break;
+            }
+        }
+
+        if (task && currentColKey && currentColKey !== 'done') {
+            const nextIndex = columns.indexOf(currentColKey) + 1;
+            const nextColKey = columns[nextIndex];
+            state.tasks[nextColKey].push(task);
+            renderKanban(); 
+            save();         
+        }
+    }
+
+    function renderKanban(){
+      ['todo','doing','done'].forEach(col=>{
+        const wrap = $('#'+col); wrap.innerHTML='';
+        state.tasks[col].forEach(task=>{
+          const el = document.createElement('div'); el.className='task'; el.draggable=true; el.dataset.id=task.id;
+          
+          let nextButton = '';
+          if (col === 'todo' || col === 'doing') { 
+              nextButton = `<button class="ghost" data-next-task="${task.id}" style="margin-right: 8px;">Next &rarr;</button>`;
+          }
+          
+          el.innerHTML = `
+            <div contenteditable="true" class="task-title" spellcheck="false">${escapeHtml(task.title)}</div>
+            <div class="row" style="justify-content: flex-end; margin-top: 10px;"> 
+              ${nextButton}
+              <button class="ghost" data-del="${task.id}">Xóa</button>
+            </div>
+          `;
+          wrap.appendChild(el);
+          el.addEventListener('dragstart', e=>{
+            e.dataTransfer.setData('text/plain', JSON.stringify({id:task.id, from:col}));
+          });
+          el.querySelector('.task-title').addEventListener('input', (e)=>{
+            task.title = e.currentTarget.textContent || '';
+            save();
+          });
+        });
+      });
+      
+      $$('.column').forEach(c=>{
+        c.ondragover = e=>{ e.preventDefault(); c.style.background='#19203f' };
+        c.ondragleave = ()=>{ c.style.background='' };
+        c.ondrop = e=>{
+          c.style.background='';
+          const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+          const to = c.dataset.col; if(!['todo','doing','done'].includes(to)) return;
+          const idx = state.tasks[data.from].findIndex(x=>x.id===data.id);
+          if(idx>-1){
+            const [it] = state.tasks[data.from].splice(idx,1);
+            state.tasks[to].push(it);
+            renderKanban(); save();
+          }
+        };
+      });
+      
+      // LOGIC XÓA TASK
+      $$('[data-del]').forEach(b=>b.onclick=()=>{
+        const id=b.dataset.del;
+        for(const k of ['todo','doing','done']){
+          const i=state.tasks[k].findIndex(x=>x.id===id);
+          if(i>-1){ state.tasks[k].splice(i,1); break;}
+        }
+        renderKanban(); save();
+      });
+      
+      // LOGIC CHUYỂN TASK BẰNG NÚT NEXT
+      $$('[data-next-task]').forEach(b => {
+          b.onclick = (e) => {
+              moveTaskNext(b.dataset.nextTask);
+              e.stopPropagation(); 
+          };
+      });
+      
+      updateCounts();
+    }
+    function updateCounts(){
+      $('#cTodo').textContent = state.tasks?.todo?.length||0;
+      $('#cDoing').textContent = state.tasks?.doing?.length||0;
+      $('#cDone').textContent = state.tasks?.done?.length||0;
+    }
+
+    /* ========= MIND MAP ========= */
+    state.map ??= {nodes:[], links:[], panX:0, panY:0, zoom:1};
+    const map = $('#map'); 
+    const mapWrap = $('#mapWrap');
+    const contextMenu = $('#contextMenu');
+    let startNodeId = null, isPanning = false, isDraggingNode = false, wasDragging = false, activeNode = null, lastMousePos = {x:0, y:0};
+    let contextNodeId = null; // Node ID đang được mở context menu
+
+    // FIX: Ngăn chặn sự kiện từ Context Menu nổi lên mapWrap
+    contextMenu.addEventListener('mousedown', e => e.stopPropagation());
+    contextMenu.addEventListener('click', e => e.stopPropagation());
+    
+    $('#addNode').onclick = ()=>{
+      const text = $('#nodeText').value.trim() || 'Node';
+      const rect = mapWrap.getBoundingClientRect();
+      const viewCenterX = rect.width / 2;
+      const viewCenterY = rect.height / 2;
+      const { panX, panY, zoom } = state.map;
+      // Tính toán tọa độ node mới ở giữa màn hình (dựa trên pan và zoom)
+      const x = (viewCenterX - panX) / zoom;
+      const y = (viewCenterY - panY) / zoom;
+      state.map.nodes.push({id:uid(), text, x, y,});
+      $('#nodeText').value='';
+      renderMap(); save();
+    };
+    $('#nodeText').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault(); 
+        $('#addNode').click(); 
+      }
+    });
+    $('#clearMap').onclick = ()=>{
+      if(confirm('Xóa toàn bộ mind map?')){ state.map={nodes:[],links:[],panX:0,panY:0,zoom:1}; renderMap(); save(); }
+    };
+
+    function renderMap(){
+      // Ẩn menu chuột phải khi render lại
+      contextMenu.style.display = 'none';
+
+      let mapMover = mapWrap.querySelector('.map-mover');
+      if (!mapMover) {
+        mapMover = document.createElement('div');
+        mapMover.className = 'map-mover';
+        Object.assign(mapMover.style, { position: 'absolute', inset: '0', transformOrigin: '0 0' });
+        mapWrap.appendChild(mapMover);
+        mapMover.appendChild(map); // map is the SVG
+      }
+      const { panX, panY, zoom } = state.map;
+      mapMover.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+
+      // clear, but keep the defs (arrowhead)
+      const defs = map.querySelector('defs').outerHTML;
+      map.innerHTML=defs;
+      
+      // draw links (FIX: Sử dụng màu accent sáng hơn để dễ thấy)
+      state.map.links.forEach(l=>{
+        const a = state.map.nodes.find(n=>n.id===l.a);
+        const b = state.map.nodes.find(n=>n.id===l.b);
+        if(!a||!b) return;
+        
+        const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        // Vị trí (không cần zoom vì nó nằm trong mapMover đã được scale)
+        line.setAttribute('x1', a.x); line.setAttribute('y1', a.y);
+        line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
+        
+        // FIX LỖI ẨN LIÊN KẾT: Đổi màu đường nối thành màu accent sáng
+        line.setAttribute('stroke', '#5b84f3'); 
+        line.setAttribute('stroke-width',`${2/zoom}`); // Điều chỉnh độ dày theo zoom
+        line.setAttribute('marker-end', 'url(#arrowhead)'); 
+        map.appendChild(line);
+      });
+      
+      // draw nodes
+      let overlay = mapMover.querySelector('.overlay');
+      if(!overlay){ 
+          overlay = document.createElement('div'); 
+          overlay.className='overlay'; 
+          Object.assign(overlay.style,{position:'absolute', inset:'0', pointerEvents:'none'}); 
+          mapMover.appendChild(overlay);
+      }
+      overlay.innerHTML='';
+      state.map.nodes.forEach(n=>{
+        const div = document.createElement('div'); div.className='node'; div.dataset.nodeId = n.id;
+        div.style.pointerEvents = 'auto';
+
+        // Highlight node đang chờ nối
+        if (n.id === startNodeId) {
+          div.style.borderColor = 'var(--accent2)';
+          div.style.boxShadow = 'var(--shadow-dark), 0 0 10px var(--accent2)';
+        }
+        
+        // Vị trí
+        div.style.left=n.x+'px'; div.style.top=n.y+'px';
+        div.style.transform = 'translate(-50%, -50%)';
+        
+        div.innerHTML = `<div class="node-text">${escapeHtml(n.text)}</div>`;
+        overlay.appendChild(div);
+      });
+    }
+
+    // --- LOGIC CONTEXT MENU (CHUỘT PHẢI) ---
+    mapWrap.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        const nodeEl = e.target.closest('.node');
+        
+        // Ẩn menu cũ
+        contextMenu.style.display = 'none';
+        contextNodeId = null; 
+
+        // Nếu click vào Node
+        if (nodeEl) {
+            // Ngăn chặn menu chuột phải khi đang chỉnh sửa
+            if(nodeEl.classList.contains('editing')) return;
+            
+            contextNodeId = nodeEl.dataset.nodeId;
+            // Hiển thị menu tại vị trí chuột (tính theo mapWrap)
+            const rect = mapWrap.getBoundingClientRect();
+            contextMenu.style.left = `${e.clientX - rect.left}px`;
+            contextMenu.style.top = `${e.clientY - rect.top}px`;
+            contextMenu.style.display = 'block';
+        }
+    });
+
+    // FIX LỖI SỬA NODE: Chỉ ẩn Context Menu và reset edit state nếu click ra ngoài cả menu và node đang chỉnh sửa
+    window.addEventListener('click', (e) => {
+        const isClickOnMenu = contextMenu.contains(e.target);
+        const activeEdit = $('.node.editing');
+        const isClickOnEditor = activeEdit && activeEdit.contains(e.target);
+        
+        if (!isClickOnMenu && !isClickOnEditor) {
+            contextMenu.style.display = 'none';
+            
+            if(activeEdit){
+                // Bắt sự kiện blur thủ công nếu cần (mặc định onblur đã handle)
+                activeEdit.querySelector('.node-text').blur(); 
+            }
+        }
+    });
+
+    // Xử lý nút SỬA
+    $('#editNodeBtn').onclick = () => {
+        if (!contextNodeId) return;
+        const nodeEl = mapWrap.querySelector(`.node[data-node-id="${contextNodeId}"]`);
+        const textEl = nodeEl.querySelector('.node-text');
+        
+        // Kích hoạt chế độ chỉnh sửa
+        textEl.contentEditable = true;
+        nodeEl.classList.add('editing'); // Thêm class để đổi con trỏ chuột và highlight
+        
+        // Đưa con trỏ vào cuối nội dung và focus (FIX: đảm bảo focus vào)
+        textEl.focus();
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(textEl);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        
+        // Lưu sự thay đổi nội dung (sử dụng onblur)
+        // Dùng addEventListener để tránh ghi đè sự kiện
+        const blurHandler = () => {
+            const nodeData = state.map.nodes.find(n => n.id === contextNodeId);
+            if (nodeData) {
+                nodeData.text = textEl.textContent || '';
+                save();
+            }
+            nodeEl.classList.remove('editing');
+            textEl.contentEditable = false;
+            textEl.removeEventListener('blur', blurHandler); // Xóa handler sau khi dùng
+            textEl.removeEventListener('keydown', keydownHandler);
+        };
+        const keydownHandler = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                textEl.blur(); // Tự động blur khi nhấn Enter
+            }
+        }
+        textEl.addEventListener('blur', blurHandler);
+        textEl.addEventListener('keydown', keydownHandler);
+
+
+        contextMenu.style.display = 'none';
+        contextNodeId = null; // Reset context
+    };
+
+    // Xử lý nút XÓA
+    $('#deleteNodeBtn').onclick = () => {
+        if (!contextNodeId) return;
+        if(confirm('Bạn có chắc chắn muốn xóa Node này không?')){
+            state.map.links = state.map.links.filter(l=>l.a!==contextNodeId && l.b!==contextNodeId);
+            state.map.nodes = state.map.nodes.filter(x=>x.id!==contextNodeId);
+            startNodeId = null; // Reset nếu Node bị xóa là Node bắt đầu liên kết
+            renderMap(); 
+            save();
+        }
+        contextMenu.style.display = 'none';
+        contextNodeId = null; // Reset context
+    };
+
+    // --- LOGIC CLICK/DRAG/PAN ---
+
+    mapWrap.addEventListener('click', e => {
+      // Bỏ qua nếu là hành động kéo (drag)
+      if (wasDragging) return; 
+      
+      // Bỏ qua nếu node đang trong chế độ chỉnh sửa
+      if (e.target.closest('.node.editing')) return;
+
+      // Ẩn context menu nếu nó đang mở
+      contextMenu.style.display = 'none';
+
+      const nodeEl = e.target.closest('.node');
+      if (nodeEl) {
+        const clickedNodeId = nodeEl.dataset.nodeId;
+        
+        if (!startNodeId) {
+          // Lần click thứ nhất: Chọn node bắt đầu
+          startNodeId = clickedNodeId;
+        } else {
+          // Lần click thứ hai: Tạo liên kết
+          if (startNodeId !== clickedNodeId) {
+            const endNodeId = clickedNodeId;
+            // Kiểm tra liên kết đã tồn tại (không phân biệt chiều)
+            const exists = state.map.links.find(l=>(l.a===startNodeId&&l.b===endNodeId)||(l.a===endNodeId&&l.b===startNodeId));
+            if(!exists){
+              state.map.links.push({a:startNodeId, b:endNodeId});
+              save();
+            }
+          }
+          // Reset sau lần click thứ hai
+          startNodeId = null;
+        }
+      } else {
+        // Click ngoài node: Hủy chọn
+        startNodeId = null;
+      }
+      renderMap();
+    });
+
+    mapWrap.addEventListener('mousedown', e => {
+      wasDragging = false; 
+      const nodeEl = e.target.closest('.node');
+      
+      // FIX LỖI SỬA NODE: Bỏ qua mousedown nếu đang chỉnh sửa nội dung
+      if(nodeEl && nodeEl.classList.contains('editing')) return;
+
+      if (nodeEl) {
+        isDraggingNode = true;
+        activeNode = state.map.nodes.find(n => n.id === nodeEl.dataset.nodeId);
+        lastMousePos = { x: e.clientX, y: e.clientY };
+        e.stopPropagation();
+      } else {
+        isPanning = true;
+        lastMousePos = { x: e.clientX, y: e.clientY };
+        mapWrap.classList.add('panning');
+      }
+    });
+    window.addEventListener('mousemove', e => {
+      if (!isDraggingNode && !isPanning) return;
+      wasDragging = true; 
+      if (isDraggingNode && activeNode) {
+        const dx = e.clientX - lastMousePos.x;
+        const dy = e.clientY - lastMousePos.y;
+        activeNode.x += dx / state.map.zoom;
+        activeNode.y += dy / state.map.zoom;
+        lastMousePos = { x: e.clientX, y: e.clientY };
+      } else if (isPanning) {
+        const dx = e.clientX - lastMousePos.x;
+        const dy = e.clientY - lastMousePos.y;
+        state.map.panX += dx;
+        state.map.panY += dy;
+        lastMousePos = { x: e.clientX, y: e.clientY };
+      }
+      renderMap();
+    });
+    window.addEventListener('mouseup', e => {
+      if ((isDraggingNode || isPanning) && wasDragging) { save(); }
+      isDraggingNode = false; activeNode = null;
+      isPanning = false; mapWrap.classList.remove('panning');
+      wasDragging = false; 
+    });
+    mapWrap.addEventListener('wheel', e => {
+      e.preventDefault();
+      const rect = mapWrap.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const zoomFactor = 1.1;
+      const oldZoom = state.map.zoom;
+      const newZoom = e.deltaY < 0 ? oldZoom * zoomFactor : oldZoom / zoomFactor;
+      state.map.zoom = Math.max(0.2, Math.min(newZoom, 4));
+
+      state.map.panX = mouseX - (mouseX - state.map.panX) * (state.map.zoom / oldZoom);
+      state.map.panY = mouseY - (mouseY - state.map.panY) * (state.map.zoom / oldZoom);
+      renderMap(); save();
+    });
+
+    /* ========= NOTES ========= */
+    state.notes ??= [];
+    let mediaRecorder, chunks=[];
+    $('#addNote').onclick = async ()=>{
+      const title = $('#noteTitle').value.trim() || 'Untitled';
+      const body = $('#noteBody').value.trim() || '';
+      let imgData = null;
+      const file = $('#noteImage').files[0];
+      if(file){
+        imgData = await fileToDataURL(file);
+        $('#noteImage').value = '';
+      }
+      state.notes.unshift({id:uid(), title, body, imgData, audio:null, ts:Date.now()});
+      $('#noteTitle').value=''; $('#noteBody').value='';
+      renderNotes(); save();
+    };
+    $('#recBtn').onclick = async ()=>{
+      if(!mediaRecorder){
+        try{
+          const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.ondataavailable = e=>chunks.push(e.data);
+          mediaRecorder.onstop = async ()=>{
+            const blob = new Blob(chunks, {type:'audio/webm'}); chunks=[];
+            const dataUrl = await blobToDataURL(blob);
+            state.notes.unshift({id:uid(), title:'Voice note', body:'', imgData:null, audio:dataUrl, ts:Date.now()});
+            renderNotes(); save();
+          };
+        }catch(e){
+          alert('Không thể truy cập micro: '+e.message); return;
+        }
+      }
+      if(mediaRecorder.state==='recording'){
+        mediaRecorder.stop(); $('#recBtn').textContent='🎙️ Bắt đầu ghi âm';
+      }else{
+        mediaRecorder.start(); $('#recBtn').textContent='⏹️ Dừng ghi';
+      }
+    };
+    function renderNotes(){
+      const list = $('#noteList'); list.innerHTML='';
+      state.notes.forEach(n=>{
+        const el = document.createElement('div'); el.className='note';
+        const date = new Date(n.ts).toLocaleString();
+        el.innerHTML = `
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <h3 style="margin:0">${escapeHtml(n.title)}</h3>
+            <span class="muted">${date}</span>
+          </div>
+          <div class="muted" style="white-space:pre-wrap;margin:.5rem 0">${escapeHtml(n.body)}</div>
+          ${n.imgData?`<img src="${n.imgData}" alt="attachment">`:''}
+          ${n.audio?`<audio controls src="${n.audio}"></audio>`:''}
+          <div class="row" style="margin-top:8px">
+            <button class="ghost" data-delnote="${n.id}">Xóa</button>
+          </div>
+        `;
+        list.appendChild(el);
+      });
+      $$('[data-delnote]').forEach(b=>b.onclick=()=>{
+        const id=b.dataset.delnote; state.notes = state.notes.filter(x=>x.id!==id); renderNotes(); save();
+      });
+    }
+    
+
+    /* ========= WHITEBOARD - LỖI ĐÃ ĐƯỢC SỬA ========= */
+    const board = $('#board');
+    let ctx = null; 
+    let currentTool = 'pen'; 
+
+    function initBoard() {
+        ctx = board.getContext('2d', { willReadFrequently: false });
+        ctx.lineCap='round'; 
+        ctx.lineJoin='round';
+        fitBoard(); 
+        
+        board.addEventListener('mousedown', startDraw);
+        board.addEventListener('mousemove', moveDraw);
+        window.addEventListener('mouseup', endDraw);
+        board.addEventListener('touchstart', startDraw, {passive:false});
+        board.addEventListener('touchmove', moveDraw, {passive:false});
+        window.addEventListener('touchend', endDraw);
+        
+        $('#wb-pen').onclick = () => {
+            currentTool = 'pen';
+            $('#wb-pen').classList.add('tool-active');
+            $('#wb-eraser').classList.remove('tool-active');
+            board.classList.remove('eraser-cursor');
+            board.classList.add('pen-cursor');
+        };
+        $('#wb-eraser').onclick = () => {
+            currentTool = 'eraser';
+            $('#wb-eraser').classList.add('tool-active');
+            $('#wb-pen').classList.remove('tool-active');
+            board.classList.remove('pen-cursor');
+            board.classList.add('eraser-cursor');
+        };
+        $('#wb-clear').onclick = () => { if (confirm('Xóa toàn bộ bảng vẽ?')) { strokes.length = 0; state.board.strokes = []; redraw(); save(); } };
+        $('#exportBoard').onclick = ()=>{
+            const url = board.toDataURL('image/png');
+            download('whiteboard.png', url);
+        };
+    }
+    
+    // Sửa lỗi: Cập nhật lại context sau khi resize
+    function fitBoard(){
+      if (!ctx) return; 
+      const dpr = window.devicePixelRatio || 1;
+      const rect = board.getBoundingClientRect();
+      
+      board.width = Math.floor(rect.width * dpr);
+      board.height = Math.floor(rect.height * dpr);
+      
+      ctx.scale(dpr,dpr);
+      
+      // Cập nhật lại các thuộc tính đã bị reset
+      ctx.lineCap='round'; 
+      ctx.lineJoin='round';
+      
+      board.classList.add('pen-cursor'); 
+      redraw();
+    }
+    window.addEventListener('resize', fitBoard); 
+
+    let drawing = false, last = null, strokes = [];
+    state.board ??= { strokes: [] };
+    strokes = state.board.strokes;
+
+    function redraw(){
+      if (!ctx) return;
+      ctx.fillStyle = '#0a0e22'; 
+      ctx.fillRect(0,0,board.clientWidth,board.clientHeight);
+      
+      for (const s of strokes) {
+        ctx.strokeStyle = s.color; ctx.lineWidth = s.size;
+        ctx.beginPath();
+        if(s.points.length > 0) {
+            ctx.moveTo(s.points[0].x, s.points[0].y);
+            for (let i = 1; i < s.points.length; i++) {
+                const p = s.points[i];
+                ctx.lineTo(p.x, p.y);
+            }
+            ctx.stroke();
+        }
+      }
+    }
+    
+    // Sửa lỗi: Tính toán tọa độ chính xác cho chuột/cảm ứng
+    function pointerPos(e){
+      const r = board.getBoundingClientRect();
+      
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      
+      const x = clientX - r.left;
+      const y = clientY - r.top;
+      
+      return { x, y };
+    }
+    
+    function startDraw(e){
+      if (!ctx || $('#whiteboard').style.display === 'none') return;
+      drawing = true;
+      last = pointerPos(e);
+      const color = currentTool === 'eraser' ? '#0a0e22' : $('#wb-color').value;
+      const size = +$('#wb-thickness').value;
+      strokes.push({ color, size, points: [last] });
+      redraw();
+      e.preventDefault(); 
+    }
+    
+    function moveDraw(e){
+      if (!drawing || !ctx) return;
+      const p = pointerPos(e);
+      const s = strokes[strokes.length - 1];
+      s.points.push(p);
+      last = p;
+      redraw();
+      e.preventDefault(); 
+    }
+    
+    function endDraw() {
+      if (!drawing) return;
+      drawing = false;
+      state.board.strokes = strokes;
+      save();
+    }
+
+    /* ========= Global Export / Import / Reset ========= */
+    function escapeHtml(s){
+      return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    }
+    function fileToDataURL(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
+    function blobToDataURL(b){ return new Promise((res)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(b); }); }
+    function download(name, url){
+      const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+    }
+    
+    $('#exportBtn').onclick = ()=>{
+      const data = JSON.stringify(state, null, 2);
+      const url = 'data:application/json;charset=utf-8,' + encodeURIComponent(data);
+      download('workspace-lite.json', url);
+    };
+    $('#importBtn').onclick = async ()=>{
+      const input = document.createElement('input'); input.type='file'; input.accept='.json,application/json';
+      input.onchange = async ()=>{
+        const file = input.files[0]; if(!file) return;
+        try{
+          const txt = await file.text();
+          const obj = JSON.parse(txt);
+          Object.assign(state, obj);
+          renderAll(); save();
+        }catch(e){ alert('Import lỗi: '+e.message); }
+      };
+      input.click();
+    };
+    $('#resetBtn').onclick = ()=>{
+      if(!confirm('Xóa toàn bộ dữ liệu cục bộ?')) return;
+      localStorage.removeItem(dbKey); location.reload();
+    };
+
+
+    /* ========= Initial Render ========= */
+    function renderAll(){
+      renderGoals();
+      renderKanban();
+      renderMap();
+      renderNotes();
+    }
+    
+    initBoard(); 
+    renderAll();
+  </script>
+</body>
+</html>
